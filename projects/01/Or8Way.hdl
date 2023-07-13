@@ -21,4 +21,4 @@ CHIP Or8Way {
     Or(a=or1234, b=in[5], out=or12345);
     Or(a=or12345, b=in[6], out=or123456);
     Or(a=or123456, b=in[7], out=out);
-}
+} 

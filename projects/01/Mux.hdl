@@ -19,4 +19,4 @@ CHIP Mux {
 	Nand(a=a, b=nsel, out=ansel);
 	Nand(a=b, b=sel, out=bsel);
 	Nand(a=ansel, b=bsel, out=out);
-}
+} 
