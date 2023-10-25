@@ -21,7 +21,7 @@
 @i
 M=0
 
-@sum
+@R2
 M=0
 
 (LOOP)
@@ -29,25 +29,19 @@ M=0
 D=M
 @R1
 D=D-M
-@STOP
+@END
 D;JEQ
 
 @R0
 D=M
-@sum
-M=D+M
+@R2
+M=M+D
 
 @i
 M=M+1
 
 @LOOP
 0;JMP
-
-(STOP)
-@sum
-D=M
-@R2
-M=D
 
 (END)
 @END
