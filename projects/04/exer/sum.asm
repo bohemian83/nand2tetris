@@ -52,6 +52,7 @@ M=M+1
 (STOP)
 //R1=sum
 @sum
+M=M+1
 D=M
 @R1
 M=D
