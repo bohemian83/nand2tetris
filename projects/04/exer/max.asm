@@ -18,17 +18,25 @@
 //if R0-R1>=0 go to END
 //R2=R0
 
+//R2=R1
 @R1
 D=M
 @R2
 M=D
 
+//if R0-R1>=0 goto END
 @R0
 D=M
 @R1
 D=D-M
 @END
-D;JGE
+D;JLT
+
+//R2=R0
+@R0
+D=M
+@R2
+M=D
 
 (END)
 @END
