@@ -36,8 +36,74 @@ CHIP CPU {
     OUT outM[16],        // M value output
         writeM,          // Write to M? 
         addressM[15],    // Address in data memory (of M)
-        pc[15];          // address of next instruction
+            pc[15];          // address of next instruction
 
-    PARTS:
-    // Put your code here:
+        PARTS: // Put your code here:
+    /*
+    Instruction bits:
+        instruction[15] == Op-code bit (determines A or C instruction)
+        instruction[14] == Unused bit during C instructions
+        instruction[13] == Unused bit during C instructions
+        instruction[12] == A bit (determines if M register is used during ALU operation)
+        instruction[11] == ALU zx bit (c1)
+        instruction[10] == ALU nx bit (c2)
+        instruction[9] == ALU zy bit (c3)
+        instruction[8] == ALU ny bit (c4)
+        instruction[7] == ALU f bit (c5)
+        instruction[6] == ALU no bit (c6)
+        instruction[5] == A register bit (d1)
+        instruction[4] == D register bit (d2)
+        instruction[3] == M register bit (d3)
+        instruction[2] == LT bit (j1)
+        instruction[1] == EQ bit (j2)
+        instruction[0] == GT bit (j3)
+    */
+
+    //Mux16 before A Register
+    Mux16(a=instruction, b=outALU, sel=instruction[15], out=inA);
+
+    //A Register
+    Not(in=instruction[15], out=isA);
+    Or(a=isA, b=instruction[5], out=loadA);
+    ARegister(in=inA, load=loadA, out=outA, out[0..14]=addressM);
+    
+    //Mux16 before ALU
+    Mux16(a=outA, b=inM, sel=instruction[12], out=outAM);
+
+    //D Register
+    And(a=instruction[15], b=instruction[4], out=loadD);
+    DRegister(in=outALU, load=loadD, out=outD);
+
+    //writeM
+    And(a=instruction[15], b=instruction[3], out=writeM);
+    
+    //ALU
+    ALU(x=outD, 
+        y=outAM,
+        zx=instruction[11],
+        nx=instruction[10],
+        zy=instruction[9],
+        ny=instruction[8], 
+        f=instruction[7],
+        no=instruction[6], 
+        out=outALU, 
+        out=outM,
+        zr=zero,
+        ng=neg);
+
+    //jump bits
+    Or(a=zero, b=neg, out=notPos);
+    Not(in=notPos, out=pos);
+
+    And(a=instruction[0], b=pos, out=jgt);
+    And(a=instruction[1], b=zero, out=jeq);
+    And(a=instruction[2], b=neg, out=jlt);
+
+    Or(a=jgt, b=jeq, out=jl2);
+    Or(a=jl2, b=jlt, out=jl3);
+    And(a=jl3, b=instruction[15], out=jump);
+
+
+    //Program Counter    
+    PC(in=outA, load=jump, reset=reset, inc=true, out[0..14]=pc);
 }
