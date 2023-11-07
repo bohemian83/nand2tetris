@@ -1,0 +1,2 @@
+class symbolTable:
+    pass
