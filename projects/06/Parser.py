@@ -1,12 +1,12 @@
-filename = "F:/Projects/Coding-Raspi/nand2tetris/projects/06/add/Add.asm"
-
-
 class Parser:
     def __init__(self, fileName):
         self.filename = fileName
         self.lineNumber = 0
         self.endOfFile = False
         self.lines = []
+        self.dest = ""
+        self.comp = ""
+        self.jump = ""
 
     def isAInstruction(self, line):
         return line[0] == "@"
@@ -18,18 +18,22 @@ class Parser:
                     line = line.split(" ")[0]
                     self.lines.append(line.strip())
 
-    def showLine(self, line):
-        print(line)
+        self.fileIterator = iter(self.lines)
 
     def readNextLine(self):
+        self.lineNumber += 1
         if self.lineNumber == len(self.lines):
             self.endOfFile = True
-        else:
-            self.showLine(self.lines[self.lineNumber])
-            self.lineNumber += 1
+        return next(self.fileIterator)
+
+    def deconstruct_instruction(self, instruction):
+        if not self.isAInstruction(instruction):
+            print(instruction)
 
 
+filename = "F:/Projects/Coding-Raspi/nand2tetris/projects/06/max/MaxL.asm"
 parser = Parser(filename)
 parser.readFile()
 while not parser.endOfFile:
-    parser.readNextLine()
+    line = parser.readNextLine()
+    parser.deconstruct_instruction(line)
