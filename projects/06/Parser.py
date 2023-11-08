@@ -1,3 +1,6 @@
+import re
+
+
 class Parser:
     def __init__(self, fileName):
         self.filename = fileName
@@ -27,8 +30,21 @@ class Parser:
         return next(self.fileIterator)
 
     def deconstruct_instruction(self, instruction):
-        if not self.isAInstruction(instruction):
-            print(instruction)
+        self.dest, self.comp, self.jump = "", "", ""
+
+        if self.isAInstruction(instruction):
+            instr = bin(int(instruction[1:]))
+            return instr
+
+        if re.match("\w+=\w([\+\-\|\&])?\w?", instruction):
+            self.dest = re.split("=", instruction)[0]
+            self.comp = re.split("=", instruction)[1]
+
+        if re.match("\w+;\w+", instruction):
+            self.comp = re.split(";", instruction)[0]
+            self.jump = re.split(";", instruction)[1]
+
+        return [self.dest, self.comp, self.jump]
 
 
 filename = "F:/Projects/Coding-Raspi/nand2tetris/projects/06/max/MaxL.asm"
@@ -36,4 +52,4 @@ parser = Parser(filename)
 parser.readFile()
 while not parser.endOfFile:
     line = parser.readNextLine()
-    parser.deconstruct_instruction(line)
+    print(parser.deconstruct_instruction(line))
