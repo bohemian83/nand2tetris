@@ -1,2 +1,2 @@
-class symbolTable:
+class SymbolTable:
     pass

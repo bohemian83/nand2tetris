@@ -7,9 +7,6 @@ class Parser:
         self.lineNumber = 0
         self.endOfFile = False
         self.lines = []
-        self.dest = ""
-        self.comp = ""
-        self.jump = ""
 
     def isAInstruction(self, line):
         return line[0] == "@"
@@ -29,27 +26,15 @@ class Parser:
             self.endOfFile = True
         return next(self.fileIterator)
 
-    def deconstruct_instruction(self, instruction):
-        self.dest, self.comp, self.jump = "", "", ""
-
-        if self.isAInstruction(instruction):
-            instr = bin(int(instruction[1:]))
-            return instr
+    def deconstructInstruction(self, instruction):
+        dest, comp, jump = "", "", ""
 
         if re.match("\w+=\w([\+\-\|\&])?\w?", instruction):
-            self.dest = re.split("=", instruction)[0]
-            self.comp = re.split("=", instruction)[1]
+            dest = re.split("=", instruction)[0]
+            comp = re.split("=", instruction)[1]
 
         if re.match("\w+;\w+", instruction):
-            self.comp = re.split(";", instruction)[0]
-            self.jump = re.split(";", instruction)[1]
+            comp = re.split(";", instruction)[0]
+            jump = re.split(";", instruction)[1]
 
-        return [self.dest, self.comp, self.jump]
-
-
-filename = "F:/Projects/Coding-Raspi/nand2tetris/projects/06/max/MaxL.asm"
-parser = Parser(filename)
-parser.readFile()
-while not parser.endOfFile:
-    line = parser.readNextLine()
-    print(parser.deconstruct_instruction(line))
+        return [dest, comp, jump]
