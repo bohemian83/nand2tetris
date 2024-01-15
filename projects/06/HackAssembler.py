@@ -7,10 +7,12 @@ parser = Parser(filename)
 decoder = Decoder()
 SymbolTable = SymbolTable()
 parser.readFile()
-while not parser.endOfFile:
-    line = parser.readNextLine()
-    if parser.isAInstruction(line):
-        print(decoder.decodeAInstruction(line))
-    else:
-        instruction = parser.deconstructInstruction(line)
-        print(decoder.decodeCInstruction(instruction))
+file = open("./projects/06/assemblerOutput.hack", "w")
+with open("./projects/06/assemblerOutput.hack", "a") as file:
+    while not parser.endOfFile:
+        line = parser.readNextLine()
+        if parser.isAInstruction(line):
+            file.write(f"{decoder.decodeAInstruction(line)}\n")
+        else:
+            instruction = parser.deconstructInstruction(line)
+            file.write(f"{decoder.decodeCInstruction(instruction)}\n")
