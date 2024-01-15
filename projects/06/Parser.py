@@ -36,5 +36,4 @@ class Parser:
         if re.match("\w+;\w+", instruction):
             comp = re.split(";", instruction)[0]
             jump = re.split(";", instruction)[1]
-
         return [dest, comp, jump]

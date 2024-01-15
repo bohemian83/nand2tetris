@@ -12,7 +12,9 @@ with open("./projects/06/assemblerOutput.hack", "a") as file:
     while not parser.endOfFile:
         line = parser.readNextLine()
         if parser.isAInstruction(line):
+            print(f"{line, decoder.decodeAInstruction(line)}")
             file.write(f"{decoder.decodeAInstruction(line)}\n")
         else:
             instruction = parser.deconstructInstruction(line)
             file.write(f"{decoder.decodeCInstruction(instruction)}\n")
+            print(f"{line, decoder.decodeCInstruction(instruction)}")

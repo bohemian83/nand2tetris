@@ -73,7 +73,7 @@ class Decoder:
 
         return (
             "111"
-            + self.destSymbols[dest]
             + self.compSymbols[comp]
+            + self.destSymbols[dest]
             + self.jumpSymbols[jmp]
         )
