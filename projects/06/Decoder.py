@@ -1,3 +1,6 @@
+import re
+
+
 class Decoder:
     def __init__(self) -> None:
         self.compSymbols = {
@@ -55,9 +58,18 @@ class Decoder:
             "JMP": "111",
         }
 
-    def decodeAInstruction(self, instruction):
-        instr = int(instruction[1:])
-        return format(instr, "016b")
+    def deconstructInstruction(self, input):
+        dest, comp, jump = "", "", ""
+
+        if re.match("\w+=\w([\+\-\|\&])?\w?", input):
+            dest = re.split("=", input)[0]
+            comp = re.split("=", input)[1]
+
+        if re.match("\w+;\w+", input):
+            comp = re.split(";", input)[0]
+            jump = re.split(";", input)[1]
+
+        return [dest, comp, jump]
 
     def decodeCInstruction(self, instruction):
         dest = instruction[0]
