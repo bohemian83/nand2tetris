@@ -1,6 +1,6 @@
 class Parser:
-    def __init__(self, fileName) -> None:
-        self.filename = fileName
+    def __init__(self) -> None:
+        # self.filename = fileName
         self.lineNumber = 0
         self.endOfFile = False
         self.lines = []
@@ -19,8 +19,9 @@ class Parser:
     def decodeSymbol(self, line):
         return format(line, "016b")
 
-    def readFile(self):
-        with open(self.filename, "r") as fl:
+    def readFile(self, filename):
+        lines = []
+        with open(filename, "r") as fl:
             for ln in fl:
                 if ln.strip() and ln[0:2] != "//":
                     ln = ln.strip().split(" ")[0]

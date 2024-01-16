@@ -40,6 +40,7 @@ class Decoder:
             "M": "001",
             "D": "010",
             "DM": "011",
+            "MD": "011",
             "A": "100",
             "AM": "101",
             "AD": "110",
@@ -61,7 +62,7 @@ class Decoder:
     def deconstructInstruction(self, input):
         dest, comp, jump = "", "", ""
 
-        if re.match("\w+=\w([\+\-\|\&])?\w?", input):
+        if re.match("\w+=\w?([\+\-\|\&])?\w?", input):
             dest = re.split("=", input)[0]
             comp = re.split("=", input)[1]
 

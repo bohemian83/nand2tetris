@@ -33,7 +33,7 @@ class SymbolTable:
         return False
 
     def insertNewValue(self, value):
-        while self.isAddressOccupied:
+        while self.isAddressOccupied():
             self.addressToInsert += 1
         else:
             self.allSymbols[value] = self.addressToInsert
