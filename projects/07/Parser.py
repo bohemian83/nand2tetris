@@ -10,7 +10,7 @@ class Parser:
         with open(filename, "r") as fl:
             for ln in fl:
                 if ln.strip() and ln[0:2] != "//":
-                    ln = ln.strip().split(" ")[0]
+                    # ln = ln.strip().split(" ")[0]
                     self.lines.append(ln.strip())
 
         self.fileIterator = iter(self.lines)

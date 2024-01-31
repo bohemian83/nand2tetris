@@ -25,22 +25,4 @@ with open(
     while not parser.endOfFile:
         line = parser.readNextLine()
         # if instruction is a label, skip it
-        if line[0] != "(":
-            # if instruction is a symbol or A-instruction, do the following:
-            if parser.isSymbol(line):
-                # strip line of all non alphanumeric characters.
-                line = line.replace("@", "").replace("(", "").replace(")", "")
-                # check if instruction is a numeric address and decode it directly.
-                if parser.isInt(line):
-                    output_file.write(f"{parser.decodeSymbol(int(line))}\n")
-                # if instruction is in the symbol table already, get that value and decode it.
-                elif line in symbols:
-                    output_file.write(f"{parser.decodeSymbol(symbols[line])}\n")
-                # else instruction needs to be inserted to the symbol table and decoded
-                else:
-                    symbols_table.insertNewValue(line)
-                    output_file.write(f"{parser.decodeSymbol(symbols[line])}\n")
-            # else decode is as a C-instruction
-            else:
-                instruction = decoder.deconstructInstruction(line)
-                output_file.write(f"{decoder.decodeCInstruction(instruction)}\n")
+        output_file.write(f"{line}\n")
