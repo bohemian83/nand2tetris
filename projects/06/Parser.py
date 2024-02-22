@@ -20,7 +20,6 @@ class Parser:
         return format(line, "016b")
 
     def readFile(self, filename):
-        lines = []
         with open(filename, "r") as fl:
             for ln in fl:
                 if ln.strip() and ln[0:2] != "//":
