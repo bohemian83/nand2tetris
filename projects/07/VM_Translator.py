@@ -22,5 +22,13 @@ with open(input_file, "r") as input:
 with open("./BasicTest.asm", "w") as output_file:
     while not parser.endOfFile:
         line = parser.readNextLine()
-        # if instruction is a label, skip it
-        output_file.write(f"{line}\n")
+        commandType = parser.commandType(line)
+        if commandType != "C_RETURN":
+            first_arg = parser.first_arg()
+            if commandType == "C_ARITHMETIC":
+                output_file.write(f"// {line}, {commandType}, {first_arg}\n")
+            elif commandType in ("C_PUSH", "C_POP", "C_CALL", "C_FUNCTION"):
+                second_arg = parser.second_arg()
+                output_file.write(
+                    f"// {line}, {commandType}, {first_arg}, {second_arg}\n"
+                )
