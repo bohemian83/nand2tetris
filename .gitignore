@@ -4,3 +4,4 @@ __pycache__
 *.hack
 *.asm
 *.json
+*.DS_*
