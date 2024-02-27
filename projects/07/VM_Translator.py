@@ -26,9 +26,11 @@ with open("./BasicTest.asm", "w") as output_file:
         if commandType != "C_RETURN":
             first_arg = parser.first_arg()
             if commandType == "C_ARITHMETIC":
-                output_file.write(f"// {line}, {commandType}, {first_arg}\n")
+                args = (commandType, first_arg)
+                line_to_write = codewriter.write_arithmetic(args)
+                output_file.write(f"//{line}\n//{line_to_write}\n")
             elif commandType in ("C_PUSH", "C_POP", "C_CALL", "C_FUNCTION"):
                 second_arg = parser.second_arg()
-                output_file.write(
-                    f"// {line}, {commandType}, {first_arg}, {second_arg}\n"
-                )
+                args = (commandType, first_arg, second_arg)
+                line_to_write = codewriter.write_pushpop(args)
+                output_file.write(f"//{line}\n//{line_to_write}\n")
