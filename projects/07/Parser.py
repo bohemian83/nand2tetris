@@ -19,7 +19,7 @@ class Parser:
             "function": "C_FUNCTION",
             "call": "C_CALL",
             "label": "C_LABEL",
-            "return": "C_REjTURN",
+            "return": "C_RETURN",
             "goto": "C_GOTO",
             "if": "C_IF",
         }
