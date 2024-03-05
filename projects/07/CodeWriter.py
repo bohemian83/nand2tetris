@@ -40,9 +40,9 @@ class CodeWriter:
                     pass
             case "temp":
                 if command == "C_PUSH":
-                    pass
+                    return f"@R{index+5}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
                 if command == "C_POP":
-                    pass
+                    return f"@SP\nM=M-1\nA=M\nD=M\n@R{index+5}\nM=D"
             case "pointer":
                 if command == "C_PUSH":
                     pass
