@@ -46,6 +46,12 @@ class CodeWriter:
                     return f"@SP\nM=M-1\nA=M\nD=M\n@R{index+5}\nM=D"
             case "pointer":
                 if command == "C_PUSH":
-                    pass
+                    if index == 0:
+                        return "@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+                    if index == 1:
+                        return "@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
                 if command == "C_POP":
-                    pass
+                    if index == 0:
+                        return "@SP\nM=M-1\nA=M\nD=M\n@THIS\nM=D"
+                    if index == 1:
+                        return "@SP\nM=M-1\nA=M\nD=M\n@THAT\nM=D"
