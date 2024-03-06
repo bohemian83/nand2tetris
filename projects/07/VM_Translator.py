@@ -2,10 +2,12 @@ from Parser import Parser
 from CodeWriter import CodeWriter
 
 # instantiate classes and readFile iterator in parser class
-input_file = "./MemoryAccess/BasicTest/BasicTest.vm"
+# input_file = "./MemoryAccess/BasicTest/BasicTest.vm"
+input_file = "./MemoryAccess/StaticTest/StaticTest.vm"
+file_name = input_file[input_file.rfind("/") + 1 : -3]
 parser = Parser()
 parser.readFile(input_file)
-codewriter = CodeWriter()
+codewriter = CodeWriter(file_name)
 
 # read in and format file
 with open(input_file, "r") as input:
@@ -19,7 +21,7 @@ with open(input_file, "r") as input:
             new_lines.append(line.strip())
 
 
-with open("./BasicTest.asm", "w") as output_file:
+with open("./" + file_name + ".asm", "w") as output_file:
     while not parser.endOfFile:
         line = parser.readNextLine()
         commandType = parser.commandType(line)
