@@ -3,6 +3,26 @@ class CodeWriter:
         self.file_name = file_name
 
     def write_arithmetic(self, args):
+        command = args[1]
+        match command:
+            case "add":
+                return "@SP\nA=M-1\nD-M\n@R13\nM=D\n@SP\nA=M-1\nA=A-1\nD=M\n@R13\nD=D+M\n@SP\nM=M-1\nA=M\nM=D"
+            case "sub":
+                return "@SP\nA=M-1\nD-M\n@R13\nM=D\n@SP\nA=M-1\nA=A-1\nD=M\n@R13\nD=D+M\n@SP\nM=M-1\nA=M\nM=D"
+            case "neg":
+                pass
+            case "eq":
+                pass
+            case "gt":
+                pass
+            case "lt":
+                pass
+            case "and":
+                pass
+            case "or":
+                pass
+            case "not":
+                pass
         return args
 
     def write_pushpop(self, args):
