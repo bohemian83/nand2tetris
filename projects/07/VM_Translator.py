@@ -3,8 +3,12 @@ from CodeWriter import CodeWriter
 
 # instantiate classes and readFile iterator in parser class
 # input_file = "./MemoryAccess/BasicTest/BasicTest.vm"
-input_file = "./MemoryAccess/StaticTest/StaticTest.vm"
+# input_file = "./MemoryAccess/StaticTest/StaticTest.vm"
+# input_file = "./MemoryAccess/PointerTest/PointerTest.vm"
+# input_file = "./StackArithmetic/SimpleAdd/SimpleAdd.vm"
+input_file = "./StackArithmetic/StackTest/StackTest.vm"
 file_name = input_file[input_file.rfind("/") + 1 : -3]
+folder_name = input_file[0 : input_file.rfind("/")]
 parser = Parser()
 parser.readFile(input_file)
 codewriter = CodeWriter(file_name)
@@ -21,7 +25,7 @@ with open(input_file, "r") as input:
             new_lines.append(line.strip())
 
 
-with open("./" + file_name + ".asm", "w") as output_file:
+with open(folder_name + "/" + file_name + ".asm", "w") as output_file:
     while not parser.endOfFile:
         line = parser.readNextLine()
         commandType = parser.commandType(line)
