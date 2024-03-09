@@ -1,28 +1,63 @@
 class CodeWriter:
     def __init__(self, file_name):
         self.file_name = file_name
+        self.jumper = 0
 
     def write_arithmetic(self, args):
         command = args[1]
+
         match command:
             case "add":
-                return "@SP\nA=M-1\nD-M\n@R13\nM=D\n@SP\nA=M-1\nA=A-1\nD=M\n@R13\nD=D+M\n@SP\nM=M-1\nA=M\nM=D"
+                return "@SP\nA=M-1\nD=M\n@R13\nM=D\n@SP\nA=M-1\nA=A-1\nD=M\n@R13\nD=D+M\n@SP\nM=M-1\nM=M-1\nA=M\nM=D\n@SP\nM=M+1"
             case "sub":
-                return "@SP\nA=M-1\nD-M\n@R13\nM=D\n@SP\nA=M-1\nA=A-1\nD=M\n@R13\nD=D+M\n@SP\nM=M-1\nA=M\nM=D"
+                return "@SP\nA=M-1\nD=M\n@R13\nM=D\n@SP\nA=M-1\nA=A-1\nD=M\n@R13\nD=D-M\n@SP\nM=M-1\nM=M-1\nA=M\nM=D\n@SP\nM=M+1"
             case "neg":
-                pass
+                return "@SP\nA=M\nD=M\n@R13\nM=-D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
             case "eq":
-                pass
+                self.jumper += 1
+                return (
+                    "@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JS_"
+                    + str(self.jumper)
+                    + "\nD;JEQ\n@SP\nA=M-1\nM=0\n@JE_"
+                    + str(self.jumper)
+                    + "\n0;JMP\n(JS_"
+                    + str(self.jumper)
+                    + ")\n@SP\nA=M-1\nM=-1\n(JE_"
+                    + str(self.jumper)
+                    + ")"
+                )
             case "gt":
-                pass
+                self.jumper += 1
+                return (
+                    "@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JS_"
+                    + str(self.jumper)
+                    + "\nD;JGT\n@SP\nA=M-1\nM=0\n@JE_"
+                    + str(self.jumper)
+                    + "\n0;JMP\n(JS_"
+                    + str(self.jumper)
+                    + ")\n@SP\nA=M-1\nM=-1\n(JE_"
+                    + str(self.jumper)
+                    + ")"
+                )
             case "lt":
-                pass
+                self.jumper += 1
+                return (
+                    "@SP\nM=M-1\nA=M\nD=M\nA=A-1\nD=M-D\n@JS_"
+                    + str(self.jumper)
+                    + "\nD;JLT\n@SP\nA=M-1\nM=0\n@JE_"
+                    + str(self.jumper)
+                    + "\n0;JMP\n(JS_"
+                    + str(self.jumper)
+                    + ")\n@SP\nA=M-1\nM=-1\n(JE_"
+                    + str(self.jumper)
+                    + ")"
+                )
             case "and":
-                pass
+                return "@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nM=D&M\n@SP\nM=M+1"
             case "or":
-                pass
+                return "@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nM=D|M\n@SP\nM=M+1"
             case "not":
-                pass
+                return "@SP\nM=M-1\nA=M\nD=M\nD=!D\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         return args
 
     def write_pushpop(self, args):
@@ -69,7 +104,7 @@ class CodeWriter:
                     if index == 0:
                         return "@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
                     if index == 1:
-                        return "@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+                        return "@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
                 if command == "C_POP":
                     if index == 0:
                         return "@SP\nM=M-1\nA=M\nD=M\n@THIS\nM=D"
