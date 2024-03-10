@@ -2,10 +2,6 @@ from Parser import Parser
 from CodeWriter import CodeWriter
 
 # instantiate classes and readFile iterator in parser class
-# input_file = "./MemoryAccess/BasicTest/BasicTest.vm"
-# input_file = "./MemoryAccess/StaticTest/StaticTest.vm"
-# input_file = "./MemoryAccess/PointerTest/PointerTest.vm"
-# input_file = "./StackArithmetic/SimpleAdd/SimpleAdd.vm"
 input_file = "./StackArithmetic/StackTest/StackTest.vm"
 file_name = input_file[input_file.rfind("/") + 1 : -3]
 folder_name = input_file[0 : input_file.rfind("/")]
