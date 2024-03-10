@@ -12,7 +12,7 @@ class CodeWriter:
             case "sub":
                 return "@SP\nA=M-1\nD=M\n@R13\nM=D\n@SP\nA=M-1\nA=A-1\nD=M\n@R13\nD=D-M\n@SP\nM=M-1\nM=M-1\nA=M\nM=D\n@SP\nM=M+1"
             case "neg":
-                return "@SP\nA=M\nD=M\n@R13\nM=-D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+                return "@SP\nA=M-1\nD=M\n@R13\nM=-D\nD=M\n@SP\nA=M-1\nM=D\n"  # "@SP\nM=M+1"
             case "eq":
                 self.jumper += 1
                 return (
