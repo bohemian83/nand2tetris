@@ -39,7 +39,11 @@ with open(folder_name + "/" + file_name + ".asm", "w") as output_file:
                 line_to_write = codewriter.write_pushpop(args)
                 output_file.write(f"//{line}\n{line_to_write}\n")
             elif commandType in ("C_GOTO", "C_IF", "C_LABEL"):
-                first_arg = parser.first_arg()
                 args = (commandType, first_arg)
                 line_to_write = codewriter.write_branching(args)
+                output_file.write(f"//{line}\n{line_to_write}\n")
+            elif commandType in ("C_CALL", "C_FUNCTION"):
+                second_arg = parser.second_arg()
+                args = (commandType, first_arg, second_arg)
+                line_to_write = codewriter.write_function_call(args)
                 output_file.write(f"//{line}\n{line_to_write}\n")
