@@ -2,7 +2,9 @@ from Parser import Parser
 from CodeWriter import CodeWriter
 
 # instantiate classes and readFile iterator in parser class
-input_file = "./StackArithmetic/StackTest/StackTest.vm"
+# input_file = "./StackArithmetic/StackTest/StackTest.vm"
+input_file = "../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm"
+# input_file = "../08/ProgramFlow/BasicLoop/BasicLoop.vm"
 file_name = input_file[input_file.rfind("/") + 1 : -3]
 folder_name = input_file[0 : input_file.rfind("/")]
 parser = Parser()
@@ -35,4 +37,9 @@ with open(folder_name + "/" + file_name + ".asm", "w") as output_file:
                 second_arg = parser.second_arg()
                 args = (commandType, first_arg, second_arg)
                 line_to_write = codewriter.write_pushpop(args)
+                output_file.write(f"//{line}\n{line_to_write}\n")
+            elif commandType in ("C_GOTO", "C_IF", "C_LABEL"):
+                first_arg = parser.first_arg()
+                args = (commandType, first_arg)
+                line_to_write = codewriter.write_branching(args)
                 output_file.write(f"//{line}\n{line_to_write}\n")
