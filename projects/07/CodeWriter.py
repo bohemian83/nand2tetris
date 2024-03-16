@@ -110,3 +110,14 @@ class CodeWriter:
                         return "@SP\nM=M-1\nA=M\nD=M\n@THIS\nM=D"
                     if index == 1:
                         return "@SP\nM=M-1\nA=M\nD=M\n@THAT\nM=D"
+
+    def write_branching(self, args):
+        command, label = args[0], args[1]
+
+        match command:
+            case "C_LABEL":
+                return f"({label})"
+            case "C_GOTO":
+                return f"@{label}\n0;JMP"
+            case "C_IF":
+                return f"@SP\nM=M-1\nA=M\nD=M\n@{label}\nD;JNE"
