@@ -21,7 +21,7 @@ class Parser:
             "label": "C_LABEL",
             "return": "C_RETURN",
             "goto": "C_GOTO",
-            "if": "C_IF",
+            "if-goto": "C_IF",
         }
 
     def readFile(self, filename: str) -> None:
