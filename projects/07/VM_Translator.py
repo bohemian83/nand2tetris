@@ -47,3 +47,6 @@ with open(folder_name + "/" + file_name + ".asm", "w") as output_file:
                 args = (commandType, first_arg, second_arg)
                 line_to_write = codewriter.write_function_call(args)
                 output_file.write(f"//{line}\n{line_to_write}\n")
+        else:
+            line_to_write = codewriter.write_return()
+            output_file.write(f"//{line}\n{line_to_write}\n")
