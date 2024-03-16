@@ -121,3 +121,15 @@ class CodeWriter:
                 return f"@{label}\n0;JMP"
             case "C_IF":
                 return f"@SP\nM=M-1\nA=M\nD=M\n@{label}\nD;JNE"
+
+    def write_function_call(self, args):
+        command, label, arg_number = args[0], args[1], args[2]
+
+        match command:
+            case "C_FUNCTION":
+                pass
+            case "C_CALL":
+                pass
+
+    def write_return(self, args):
+        pass
