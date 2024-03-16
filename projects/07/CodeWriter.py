@@ -131,5 +131,5 @@ class CodeWriter:
             case "C_CALL":
                 pass
 
-    def write_return(self, args):
+    def write_return(self):
         pass
