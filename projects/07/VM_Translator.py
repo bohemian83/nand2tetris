@@ -5,28 +5,42 @@ import os
 
 class VM_Traslator:
     def __init__(self, source) -> None:
-        self.source = "../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm"
+        self.source = source
         # instantiate classes and readFile iterator in parser class
-        self.is_dir = os.path.isdir(self.source)
-        self.file_name = self.source[self.source.rfind("/") + 1 : -3]
-        self.folder_path = self.source[0 : self.source.rfind("/")]
-        self.folder_name = self.folder_path[self.folder_path.rfind("/") + 1 :]
         self.parser = Parser()
         self.codewriter = CodeWriter(self.source)
+        self.parser.readFile(self.source)
+        # get folder path and folder name for writing the output file
+        self.folder_path = self.source[0 : self.source.rfind("/")]
+        self.folder_name = self.folder_path[self.folder_path.rfind("/") + 1 :]
 
     def read_file(self):
-        # read in and format file
-        self.parser.readFile(self.source)
-        with open(self.source, "r") as input:
-            lines = input.readlines()
-            new_lines = []
-            # remove comments, empty lines and spaces before instructions
-            for line in lines:
-                if line.strip() and line[0:2] != "//":
-                    line = line.strip().split(" ")[0]
-                    new_lines.append(line.strip())
-
-        return new_lines
+        pass
+        # # first check if source is a folder
+        # is_dir = os.path.isdir(self.source)
+        # new_lines = []
+        # if not is_dir:
+        #     # read in and format file
+        #     with open(self.source, "r") as input:
+        #         lines = input.readlines()
+        #         # remove comments, empty lines and spaces before instructions
+        #         for line in lines:
+        #             if line.strip() and line[0:2] != "//":
+        #                 line = line.strip().split(" ")[0]
+        #                 new_lines.append(line.strip())
+        # else:
+        #     # if source is folder, get all vm files in folder and read content into new_lines
+        #     files = [file for file in os.listdir(self.source) if ".vm" in file]
+        #     for file in files:
+        #         path = self.source + "/" + file
+        #         self.parser.readFile(path)
+        #         with open(path, "r") as input:
+        #             for line in lines:
+        #                 if line.strip() and line[0:2] != "//":
+        #                     line = line.strip().split(" ")[0]
+        #                     new_lines.append(line.strip())
+        #
+        # return new_lines
 
     def write_file(self) -> None:
         with open(
@@ -60,6 +74,8 @@ class VM_Traslator:
                     output_file.write(f"//{line}\n{line_to_write}\n")
 
 
-vm_translator = VM_Traslator("source")
+source = "../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm"
+# source = "../08/FunctionCalls/FibonacciElement"
+vm_translator = VM_Traslator(source)
 vm_translator.read_file()
 vm_translator.write_file()
