@@ -40,7 +40,6 @@ class Parser:
 
     def commandType(self, line: str):
         self.elements = line.split(" ")
-        print(self.elements)
         return self.commands[self.elements[0]]
 
     def first_arg(self) -> str:
