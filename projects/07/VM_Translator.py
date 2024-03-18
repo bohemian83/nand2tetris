@@ -7,8 +7,10 @@ class VM_Traslator:
     def __init__(self, source) -> None:
         self.source = "../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm"
         # instantiate classes and readFile iterator in parser class
+        self.is_dir = os.path.isdir(self.source)
         self.file_name = self.source[self.source.rfind("/") + 1 : -3]
-        self.folder_name = self.source[0 : self.source.rfind("/")]
+        self.folder_path = self.source[0 : self.source.rfind("/")]
+        self.folder_name = self.folder_path[self.folder_path.rfind("/") + 1 :]
         self.parser = Parser()
         self.codewriter = CodeWriter(self.source)
 
@@ -27,7 +29,9 @@ class VM_Traslator:
         return new_lines
 
     def write_file(self) -> None:
-        with open(self.folder_name + "/" + self.file_name + ".asm", "w") as output_file:
+        with open(
+            self.folder_path + "/" + self.folder_name + ".asm", "w"
+        ) as output_file:
             while not self.parser.endOfFile:
                 line = self.parser.readNextLine()
                 commandType = self.parser.commandType(line)
