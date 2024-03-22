@@ -89,7 +89,10 @@ class CodeWriter:
                 if command == "C_POP":
                     return f"@{index}\nD=A\n@THAT\nD=D+M\n@R13\nM=D\n@SP\nM=M-1\n@SP\nA=M\nD=M\n@R13\nA=M\nM=D"
             case "static":
-                label = self.file_name + "." + str(index)
+                file_name = self.file_name[
+                    self.file_name.rfind("/") + 1 : self.file_name.rfind(".vm")
+                ]
+                label = file_name + "." + str(index)
                 if command == "C_PUSH":
                     return f"@{label}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
                 if command == "C_POP":
