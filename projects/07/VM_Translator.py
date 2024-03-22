@@ -49,22 +49,23 @@ class VM_Traslator:
 
             line = parser.readNextLine()
             commandType = parser.commandType(line)
-            first_arg = parser.first_arg()
 
             if commandType != "C_RETURN":
                 if commandType == "C_ARITHMETIC":
                     line_to_write = codewriter.write_arithmetic(
-                        (commandType, first_arg)
+                        (commandType, parser.first_arg())
                     )
                 elif commandType in ("C_PUSH", "C_POP", "C_CALL", "C_FUNCTION"):
                     line_to_write = codewriter.write_pushpop(
-                        (commandType, first_arg, parser.second_arg())
+                        (commandType, parser.first_arg(), parser.second_arg())
                     )
                 elif commandType in ("C_GOTO", "C_IF", "C_LABEL"):
-                    line_to_write = codewriter.write_branching((commandType, first_arg))
+                    line_to_write = codewriter.write_branching(
+                        (commandType, parser.first_arg())
+                    )
                 elif commandType in ("C_CALL", "C_FUNCTION"):
                     line_to_write = codewriter.write_function_call(
-                        (commandType, first_arg, parser.second_arg())
+                        (commandType, parser.first_arg(), parser.second_arg())
                     )
             else:
                 line_to_write = codewriter.write_return()
