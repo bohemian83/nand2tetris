@@ -125,14 +125,38 @@ class CodeWriter:
             case "C_IF":
                 return f"@SP\nM=M-1\nA=M\nD=M\n@{label}\nD;JNE"
 
-    def write_function_call(self, args):
+    def write_function(self, args):
         command, label, arg_number = args[0], args[1], args[2]
 
-        match command:
-            case "C_FUNCTION":
-                pass
-            case "C_CALL":
-                pass
+        return f"{command}, {label}, {arg_number}"
+
+    def write_call(self, args):
+
+        # // call functionName nArgs
+        # push retAddrLabel // Generates and pushes this label
+        # push LCL // Saves the caller’s LCL
+        # push ARG // Saves the caller’s ARG
+        # push THIS // Saves the caller’s THIS
+        # push THAT // Saves the caller’s THAT
+        # ARG = SP – 5 – nArgs // Repositions ARG
+        # LCL = SP // Repositions LCL
+        # goto functionName // Transfers control to the callee
+        # (retAddrLabel) // Injects this label into the code
+
+        _, function_name, arg_number = args[0], args[1], args[2]
+
+        push_lcl = "@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+        push_arg = "@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+        push_this = "@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+        push_that = "@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
+        new_arg = (
+            f"@SP\nD=M\n@R13\nM=D\n@{5 + arg_number}\nD=A\n@R13\nM=M-D\nD=M\n@ARG\nM=D"
+        )
+        new_lcl = "@LCL\nM=D"
+        goto_function = f"@{function_name}\n0;JMP"
+
+        return f"(retAddrLabel)\n{push_lcl}\n{push_arg}\n{push_this}\n{push_that}\n{new_arg}\n{new_lcl}\n{goto_function}\n@(retAddrLabel)"
 
     def write_return(self):
-        pass
+
+        return "return"
