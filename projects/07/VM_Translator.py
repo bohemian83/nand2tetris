@@ -55,7 +55,7 @@ class VM_Traslator:
                     line_to_write = codewriter.write_arithmetic(
                         (commandType, parser.first_arg())
                     )
-                elif commandType in ("C_PUSH", "C_POP", "C_CALL", "C_FUNCTION"):
+                elif commandType in ("C_PUSH", "C_POP"):
                     line_to_write = codewriter.write_pushpop(
                         (commandType, parser.first_arg(), parser.second_arg())
                     )
@@ -63,8 +63,12 @@ class VM_Traslator:
                     line_to_write = codewriter.write_branching(
                         (commandType, parser.first_arg())
                     )
-                elif commandType in ("C_CALL", "C_FUNCTION"):
-                    line_to_write = codewriter.write_function_call(
+                elif commandType == "C_FUNCTION":
+                    line_to_write = codewriter.write_function(
+                        (commandType, parser.first_arg(), parser.second_arg())
+                    )
+                elif commandType == "C_CALL":
+                    line_to_write = codewriter.write_call(
                         (commandType, parser.first_arg(), parser.second_arg())
                     )
             else:
