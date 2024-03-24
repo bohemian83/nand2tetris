@@ -2,6 +2,8 @@ class CodeWriter:
     def __init__(self, file_name):
         self.file_name = file_name
         self.jumper = 0
+        self.function_count = 0
+        self.return_count = 0
 
     def write_arithmetic(self, args):
         command = args[1]
@@ -126,9 +128,24 @@ class CodeWriter:
                 return f"@SP\nM=M-1\nA=M\nD=M\n@{label}\nD;JNE"
 
     def write_function(self, args):
-        command, label, arg_number = args[0], args[1], args[2]
+        # // function functionName nVars
+        # (functionName) // function’s entry point (injected label)
+        # // push nVars 0 values (initializes the callee’s local variables)
+        # push 0
+        # ..
+        # push 0
 
-        return f"{command}, {label}, {arg_number}"
+        _, function_name, arg_number = args[0], args[1], args[2]
+
+        push_args = ""
+        for index in range(arg_number - 1):
+            push_args = push_args + "@0\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+
+        return (
+            f"({function_name})"
+            if push_args == ""
+            else f"({function_name})\n{push_args}"
+        )
 
     def write_call(self, args):
 
@@ -145,6 +162,7 @@ class CodeWriter:
 
         _, function_name, arg_number = args[0], args[1], args[2]
 
+        push_return = f"@retAddr{self.function_count}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         push_lcl = "@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         push_arg = "@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         push_this = "@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"
@@ -154,9 +172,36 @@ class CodeWriter:
         )
         new_lcl = "@LCL\nM=D"
         goto_function = f"@{function_name}\n0;JMP"
+        retAddr = f"retAddr{self.function_count}"
 
-        return f"(retAddrLabel)\n{push_lcl}\n{push_arg}\n{push_this}\n{push_that}\n{new_arg}\n{new_lcl}\n{goto_function}\n@(retAddrLabel)"
+        self.function_count += 1
+
+        return f"{push_return}\n{push_lcl}\n{push_arg}\n{push_this}\n{push_that}\n{new_arg}\n{new_lcl}\n{goto_function}\n({retAddr})"
 
     def write_return(self):
+        # //The code below creates and uses two temporary variables:
+        # // endFrame and retAddr;
+        # // The pointer notation *addr is used to denote: RAM[addr].
+        # endFrame = LCL // gets the address at the frame’s end
+        # retAddr = *(endFrame – 5) // gets the return address
+        # *ARG = pop() // puts the return value for the caller
+        # SP = ARG + 1 // repositions SP
+        # THAT = *(endFrame – 1) // restores THAT
+        # THIS = *(endFrame – 2) // restores THIS
+        # ARG = *(endFrame – 3) // restores ARG
+        # LCL = *(endFrame – 4) // restores LCL
+        # goto retAddr // jumps to the return address
 
-        return "return"
+        endframe_addr = "@LCL\nD=M\n@R13\nM=D"
+        return_addr = "@5\nA=D-A\nA=M\nD=M\n@R14\nM=D"
+        return_value = "@SP\nM=M-1\nA=M\nD=M\n@ARG\nA=M\nM=D"
+        reposition_sp = "@ARG\nD=M+1\n@SP\nM=D"
+        restore_that = "@R13\nA=M-1\nA=M\nD=M\n@THAT\nM=D"
+        restore_this = "@R13\nD=M\n@2\nA=D-A\nA=M\nD=M\n@THIS\nM=D"
+        restore_arg = "@R13\nD=M\n@3\nA=D-A\nA=M\nD=M\n@ARG\nM=D"
+        restore_lcl = "@R13\nD=M\n@4\nA=D-A\nA=M\nD=M\n@LCL\nM=D"
+        goto_return = f"@retAddr{self.return_count}\n0;JMP"
+
+        self.return_count += 1
+
+        return f"{endframe_addr}\n{return_addr}\n{return_value}\n{reposition_sp}\n{restore_that}\n{restore_this}\n{restore_arg}\n{restore_lcl}\n{goto_return}"
